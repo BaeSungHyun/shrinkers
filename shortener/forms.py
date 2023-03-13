@@ -2,7 +2,7 @@
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from shortener.models import Users, ShortenerUrls
+from shortener.models import Users, ShortenedUrls
 from django.forms.widgets import Widget # widget= 때문에 import 한듯??
 from django.utils.translation import gettext_lazy as _
 from urllib.parse import urlparse
@@ -39,7 +39,7 @@ class LoginForm(forms.Form):
 
 class UrlCreateForm(forms.ModelForm):
     class Meta:
-        model = ShortenerUrls
+        model = ShortenedUrls
         fields = ["nick_name", "target_url"]
         labels = {
             "nick_name": _("별칭"),
@@ -63,6 +63,6 @@ class UrlCreateForm(forms.ModelForm):
     def update_form(self, request, url_id):
         instance = super(UrlCreateForm, self).save(commit=False)
         instance.target_url = instance.target_url.strip()
-        ShortenerUrls.objects.filter(pk=url_id, created_by_id=request.user.id).update(
+        ShortenedUrls.objects.filter(pk=url_id, created_by_id=request.user.id).update(
             target_url = instance.target_url, nick_name = instance.nick_name
         )
