@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from shortener.models import Users, ShortenerUrls
+from shortener.models import Users, ShortenedUrls
 from shortener.forms import RegisterForm, LoginForm, UrlCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -130,7 +130,7 @@ def list_view(request):
 
 
 def url_list(request):
-    get_list = ShortenerUrls.objects.order_by("-created_at").all()
+    get_list = ShortenedUrls.objects.order_by("-created_at").all()
     return render(request, "url_list.html", {"list":get_list})
 
 
@@ -153,7 +153,7 @@ def url_create(request):
 @login_required
 def url_change(request, action, url_id):
     if request.method == "POST":
-        url_data = ShortenerUrls.objects.filter(pk=url_id)
+        url_data = ShortenedUrls.objects.filter(pk=url_id)
         if url_data.exists():
             if url_data.first().created_by_id != request.user.id:
                 msg = "자신이 소유하지 않은 URL 입니다."
@@ -172,7 +172,7 @@ def url_change(request, action, url_id):
         else:
             msg = "해당 URL 정보를 찾을 수 없습니다."
     elif request.method == "GET" and action == "update":
-        url_data = ShortenerUrls.objects.filter(pk=url_id).first()
+        url_data = ShortenedUrls.objects.filter(pk=url_id).first()
         form = UrlCreateForm(instance = url_data)
         return render(request, "url_create.html", {"form": form, "is_update":True})
     
