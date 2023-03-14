@@ -21,28 +21,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9^k9x5bql53y7%$r*nq67*_aj!2b%*wwzx^4kk68t^d#t_spfl'
+SECRET_KEY = "django-insecure-9^k9x5bql53y7%$r*nq67*_aj!2b%*wwzx^4kk68t^d#t_spfl"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ENV = os.environ.get("DJANGO_ENV", "dev") # first option 없으면, dev. GCP 에서 설정 예정.
+ENV = os.environ.get("DJANGO_ENV", "dev")  # first option 없으면, dev. GCP 에서 설정 예정.
 
 if ENV == "dev":
     DEBUG = True
-else: # devleopment, staging, production 이랑 secret key 환경 다 다름
+else:  # devleopment, staging, production 이랑 secret key 환경 다 다름
     DEBUG = False
 
-ALLOWED_HOSTS = ["*"] # all
+ALLOWED_HOSTS = ["*"]  # all
 
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'shortener',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "shortener",
 ]
 
 # if DEBUG:
@@ -52,19 +52,21 @@ INSTALLED_APPS = [
 #     ]
 
 INTERNAL_IPS = [
-    "127.0.0.1", # When you need to examine ui/ux just comment it
-] # Django Debug Toolbar
+    "127.0.0.1",  # When you need to examine ui/ux just comment it
+]  # Django Debug Toolbar
 
-LOGIN_URL = "/login" # views.py : @login_required directs to account/login in default setting
+LOGIN_URL = (
+    "/login"  # views.py : @login_required directs to account/login in default setting
+)
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware', # 지우면 session login 사용 안함
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",  # 지우면 session login 사용 안함
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 # if DEBUG:
@@ -76,9 +78,9 @@ MIDDLEWARE = [
 #                   'django.contrib.sessions.backends.file' 'django.contrib.sessions.backends.cache' 'django.contrib.sessions.backends.cached'
 #                   'django.contrib.sessions.backends.signed_cookies'
 
- 
+
 # SESSION_COOKIE_AGE = 1209600  (초) 얼마나 유지 (2주)
-# SESSION_COOKIE_DOMAIN = None (example.com) 
+# SESSION_COOKIE_DOMAIN = None (example.com)
 # SESSION_COOKIE_HTTPONLY = True
 # SESSION_COOKIE_NAME = "sessionid"
 # SESSION_COOKIE_SAMESITE = Lax 설정한 사이트에서만 쿠키가 사용. strict = 모든 사이트에서 쿠키 사용.
@@ -86,46 +88,43 @@ MIDDLEWARE = [
 # SESSION_COOKIE_EVERY_REQUEST = False  True라고 바꿔주면, 2주동안 어떤 요청이 없으면 logout 자동
 
 
-# Django session : session id 는 그대로 유지. session data 가 변경. 
+# Django session : session id 는 그대로 유지. session data 가 변경.
 #                   cookie-base. 왜냐하면 rendering 을 같이 해줘야 한다. 웹서버 api (flask, django rest, fast api)
 #                   라면, rendering이 없으니 굳이 cookie-base아니고 JWT (javascript 안에서 돌아감) 방식 채택 가능
 
-ROOT_URLCONF = 'shrinkers.urls'
+ROOT_URLCONF = "shrinkers.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'shrinkers.wsgi.application'
+WSGI_APPLICATION = "shrinkers.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME' : 'app_db',
-        'USER' : 'root', # root user 니까!
-        'PASSWORD': 'tjdgus12!', # 우리가 썼던 password
-        'HOST':'34.64.203.138',
-        'PORT': 3306, # mysql default
-        'OPTIONS':{
-            'autocommit' : True,
-            'charset':'utf8mb4'
-        }
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "app_db",
+        "USER": "root",  # root user 니까!
+        "PASSWORD": "tjdgus12!",  # 우리가 썼던 password
+        "HOST": "34.64.203.138",
+        "PORT": 3306,  # mysql default
+        "OPTIONS": {"autocommit": True, "charset": "utf8mb4"},
     }
 }
 
@@ -135,16 +134,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -152,9 +151,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'
+LANGUAGE_CODE = "ko-kr"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -164,9 +163,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

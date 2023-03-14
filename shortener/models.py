@@ -85,9 +85,11 @@ class Organization(TimeStampedModel):
 
 class Users(models.Model):
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE
+        User,
+        on_delete=models.CASCADE,
     )  # AUTH_USER_MODEL 이랑 1:1 mapping. Settings 에서 지워줘야함
     full_name = models.CharField(max_length=100, null=True)
+    url_count = models.IntegerField(default=0)
     # organization 만들면 유료, 안 만들면 무료
     organization = models.ForeignKey(
         Organization, on_delete=models.DO_NOTHING, null=True
@@ -118,10 +120,14 @@ class ShortenedUrls(TimeStampedModel):
         str_pool = string.digits + string.ascii_letters
         return ("".join([random.choice(str_pool) for _ in range(6)])).lower()
 
+    def rand_letter():
+        str_pool = string.ascii_letters
+        return random.choice(str_pool).lower()
+
     nick_name = models.CharField(max_length=100)
     category = models.ForeignKey(Categories, on_delete=models.DO_NOTHING, null=True)
     prefix = models.CharField(
-        max_length=50
+        max_length=50, default=rand_letter
     )  # /a/1234, /b/1234 ... 기준을 하나 더 만들어줌. 더 많은 url
     creator = models.ForeignKey(Users, on_delete=models.CASCADE)
     target_url = models.CharField(max_length=2000)

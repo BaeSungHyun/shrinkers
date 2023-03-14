@@ -27,18 +27,18 @@
                     </tr>
                 </thead>
                 <tbody>
-            {% for l in list%}
+            {% for l in list %}
                     <th scope="row">{{ l.nick_name }}</th>
               <td>{{ l.target_url }}</td>
-              <td>{{ l.shortened_url }}</td>
-              <td>{{ l.created_via }}</td>
+              <td>{{ l.shortend_url }}</td>
+              <td>{{ l.create_via }}</td>
               <td>{{ l.created_at }}</td>
               <td>
                 <form action="/urls/delete/{{ l.id }}/" method="POST">
                 {% csrf_token %}
-                  <a href="/urls/update/{{ l.id }}/" class="btn btn-sm btn-primary">
-                    수정
-                  </a>
+                <a href="/urls/update/{{ l.id }}/" class="btn btn-sm btn-primary">
+                  수정
+                </a>
                   <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제 하시겠습니까?');">
                     삭제
                   </button>
