@@ -1,8 +1,23 @@
 from django.contrib import messages
 from shortener.forms import UrlCreateForm
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from shortener.models import ShortenedUrls
 from django.contrib.auth.decorators import login_required
+from shortener.utils import url_count_charger
+
+
+def url_redirect(request, prefix, url):
+    print(prefix, url)
+    get_url = get_object_or_404(ShortenedUrls, prefix=prefix, shortend_url=url)
+    is_permanent = False
+    target = get_url.target_url
+    if get_url.creator.organization:  # Premium
+        is_permanent = True  # 301
+
+    if not target.startswith("https://") and not target.startswith("https://"):
+        target = "https://" + get_url.target_url
+
+    return redirect(target, permanent=is_permanent)
 
 
 def url_list(request):
@@ -39,7 +54,12 @@ def url_change(request, action, url_id):  # url_id from urls.py
             else:
                 if action == "delete":
                     msg = f"{url_data.first().nick_name} 삭제 완료!"
-                    url_data.delete()
+                    try:
+                        url_data.delete()
+                    except Exception as e:
+                        print(e)
+                    else:
+                        url_count_charger(request, False)
                     messages.add_message(request, messages.INFO, msg)
                 elif action == "update":
                     msg = f"{url_data.first().nick_name} 수정 완료!"

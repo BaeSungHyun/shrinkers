@@ -76,7 +76,7 @@ class UrlCreateForm(forms.ModelForm):
         instance.creator_id = request.user.id
         instance.target_url = instance.target_url.strip()
         if commit:
-            try:
+            try:  # url_count 때문에 만듦
                 instance.save()
             except Exception as e:
                 print(e)

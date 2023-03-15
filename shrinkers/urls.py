@@ -13,30 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from shortener.urls.views import url_redirect
+
 from django.contrib import admin
 from django.urls import path
-from shortener.views import (
-    index,
-    redirect_test,
-    get_user,
-    register,
-    login_view,
-    logout_view,
-    list_view,
-)
+
 from django.conf import settings
 from django.conf.urls import include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="index"),
-    path("redirect/", redirect_test),
-    path("register/", register, name="register"),
-    path("get_user/<int:user_id>/", get_user),
-    path("login/", login_view, name="login"),
-    path("logout/", logout_view, name="logout"),
-    path("list", list_view, name="list_view"),
+    path("", include("shortener.index.urls")),
     path("urls/", include("shortener.urls.urls")),
+    path("<str:prefix>/<str:url>", url_redirect),
 ]
 
 
