@@ -1,5 +1,5 @@
 from django.contrib import admin
-from shortener.models import PayPlan, Users, Organization
+from shortener.models import PayPlan, Users, Organization, Statistic
 
 # Register your models here.
 
@@ -7,3 +7,4 @@ from shortener.models import PayPlan, Users, Organization
 admin.site.register(PayPlan)
 admin.site.register(Users)
 admin.site.register(Organization)
+admin.site.register(Statistic)

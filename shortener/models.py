@@ -15,6 +15,7 @@ import random
 
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
+from django.contrib.gis.geoip2 import GeoIP2
 
 # Inheriting 'AbstractUser' ables to customize User Model. Don't forget to point to AUTH_USER_MODEL
 # Creates in existing 'User' table (One Table).
@@ -131,6 +132,7 @@ class ShortenedUrls(TimeStampedModel):
     )  # /a/1234, /b/1234 ... 기준을 하나 더 만들어줌. 더 많은 url
     creator = models.ForeignKey(Users, on_delete=models.CASCADE)
     target_url = models.CharField(max_length=2000)
+    click = models.BigIntegerField(default=0)
     shortend_url = models.CharField(max_length=6, default=rand_string)
     create_via = models.CharField(
         max_length=8, choices=UrlCreatedVia.choices, default=UrlCreatedVia.WEBSITE
@@ -140,3 +142,40 @@ class ShortenedUrls(TimeStampedModel):
     class Meta:
         indexes = [models.Index(fields=["prefix", "shortend_url"])]
         # index in db - Doesn't know what it does
+    
+    def clicked(self):
+        self.click += 1
+        self.save()
+
+class Statistic(TimeStampedModel):
+    class ApproachDevice(models.TextChoices):
+        PC = "pc"
+        MOBILE = "mobile"
+        TABLET = "tablet"
+
+    shortend_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
+    ip = models.CharField(max_length=15)
+    web_browser = models.CharField(max_length=50)
+    device = models.CharField(max_length=6, choices=ApproachDevice.choices)
+    device_os = models.CharField(max_length=30)
+    country_code = models.CharField(max_length=2, default="XX")
+    country_name = models.CharField(max_length=100, default="UNKNOWN")
+
+    # 가능하면 view 가 아닌 model에. 같은 내용이면 재사용 가능.
+    def record(self, request, url: ShortenedUrls):
+        self.shortend_url = url # self.shortend_url_id need id. But just self.shortend_url needs an object.
+        self.ip = request.META["REMOTE_ADDR"] # django default ip address. In server use gcp ip method.
+        # user_agent : pc 인지 mobile 인지 browser.family 는 뭔지 등등 
+        # settings.py 에서 더해줌!
+        self.web_browser = request.user_agent.browser.family
+        self.device = self.ApproachDevice.MOBILE if request.user_agent.is_mobile else self.ApproachDevice.TABLET if request.user_agent.is_tablet else self.ApproachDevice.PC
+        self.device_os = request.user_agent.os.family
+        try:
+            country = GeoIP2().country(self.ip)
+            self.country_code = country.get("country_code", "XX")
+            self.country_name = country.get("country_name", "UNKNOWN")
+        except:
+            pass
+        url.clicked()
+        self.save()
+
