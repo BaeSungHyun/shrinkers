@@ -1,11 +1,13 @@
 from django.contrib import messages
 from shortener.forms import UrlCreateForm
 from django.shortcuts import redirect, render, get_object_or_404
-from shortener.models import ShortenedUrls, Statistic
+from shortener.models import ShortenedUrls, Statistic, TrackingParams
 from django.contrib.auth.decorators import login_required
 from shortener.utils import url_count_charger
 from ratelimit.decorators import ratelimit
-from django.contrib.gis.geoip2 import GeoIP2
+# from django.contrib.gis.geoip2 import GeoIP2
+from django.db.models import Count
+
 
 @ratelimit(key="ip", rate="3/m")
 def url_redirect(request, prefix, url):
@@ -21,13 +23,20 @@ def url_redirect(request, prefix, url):
     if not target.startswith("https://") and not target.startswith("https://"):
         target = "https://" + get_url.target_url
 
+    custom_params = request.GET.dict() if request.GET.dict() else None
     history = Statistic() # save statistic
-    history.record(request, get_url)
+    history.record(request, get_url, custom_params)
 
     return redirect(target, permanent=is_permanent)
 
 
 def url_list(request):
+    # a = ( 통계 내는법!
+    #     Statistic.objects.filter(shortend_url_id = 5)
+    #     .values("custom_params__email_id") JSON field 는 '__' key 값을 찾음
+    #     .annotate(t=Count("custom_params__email_id"))
+    # )
+    # print(a)
     get_list = ShortenedUrls.objects.order_by("-created_at").all()
     return render(request, "url_list.html", {"list": get_list})
 

@@ -2,6 +2,8 @@ from django.db import models
 
 import string
 import random
+import itertools
+from typing import Dict
 
 # Create your models here.
 
@@ -15,7 +17,9 @@ import random
 
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
-from django.contrib.gis.geoip2 import GeoIP2
+# from django.contrib.gis.geoip2 import GeoIP2  - model_utils 에 있음
+from django.db.models.base import Model
+from shortener.model_utils import dict_filter, dict_slice, location_finder
 
 # Inheriting 'AbstractUser' ables to customize User Model. Don't forget to point to AUTH_USER_MODEL
 # Creates in existing 'User' table (One Table).
@@ -160,18 +164,29 @@ class Statistic(TimeStampedModel):
     device_os = models.CharField(max_length=30)
     country_code = models.CharField(max_length=2, default="XX")
     country_name = models.CharField(max_length=100, default="UNKNOWN")
+    custom_params = models.JSONField(null= True)
 
     # 가능하면 view 가 아닌 model에. 같은 내용이면 재사용 가능.
-    def record(self, request, url: ShortenedUrls):
+    def record(self, request, url: ShortenedUrls, params: Dict):
         self.shortend_url = url # self.shortend_url_id need id. But just self.shortend_url needs an object.
         self.ip = request.META["REMOTE_ADDR"] # django default ip address. In server use gcp ip method.
         # user_agent : pc 인지 mobile 인지 browser.family 는 뭔지 등등 
         # settings.py 에서 더해줌!
         self.web_browser = request.user_agent.browser.family
-        self.device = self.ApproachDevice.MOBILE if request.user_agent.is_mobile else self.ApproachDevice.TABLET if request.user_agent.is_tablet else self.ApproachDevice.PC
+        self.device = (self.ApproachDevice.MOBILE 
+                       if request.user_agent.is_mobile 
+                       else self.ApproachDevice.TABLET 
+                       if request.user_agent.is_tablet 
+                       else self.ApproachDevice.PC)
         self.device_os = request.user_agent.os.family
+        
+        # t : list
+        t = TrackingParams.get_tracking_params(url.id) # url.id : int
+        # params : QueryDict.dict()
+        self.custom_params = dict_slice(dict_filter(params, t), 5)
+
         try:
-            country = GeoIP2().country(self.ip)
+            country = location_finder(request)
             self.country_code = country.get("country_code", "XX")
             self.country_name = country.get("country_name", "UNKNOWN")
         except:
@@ -179,3 +194,16 @@ class Statistic(TimeStampedModel):
         url.clicked()
         self.save()
 
+# Make table as 'TrackingParams' that has a 'params' column that only takes
+# 'email_id' and 'ref_by'
+class TrackingParams(TimeStampedModel):
+    shortend_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
+    params = models.CharField(max_length=20)
+
+    # values_list : return 'params' column in flat mode as list
+    @classmethod
+    def get_tracking_params(cls, shortend_url_id: int):
+        return (cls.objects.filter(shortend_url_id=shortend_url_id)
+        .values_list("params", flat=True))
+    # flat = True : ["email_id", "ref_by"]
+    # flat = False : [{"params":"email_id", "params":"ref_by"}]
