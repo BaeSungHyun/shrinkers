@@ -1,0 +1,60 @@
+[33mcommit 551cf34e21b8669599b296a4e1a93365c2052855[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Thu Mar 16 11:53:04 2023 +0900
+
+    'custom_tracking'
+
+[33mcommit 433f12fb1e994e091c204192b85078e54dc47a3e[m
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Thu Mar 16 10:03:38 2023 +0900
+
+    '3rd_party_library'
+
+[33mcommit 3ab5c289a9d950ecce7cce62733a797b438ebe77[m
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Wed Mar 15 23:34:31 2023 +0900
+
+    'shortened_url_redirect'
+
+[33mcommit 23b61c136574c36001a8ae7d63068e4e516ed9a7[m
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Tue Mar 14 09:08:15 2023 +0900
+
+    'new_file_structure'
+
+[33mcommit e0e62d13bb16d604243ec6f7dc437c9f223ee6ed[m
+Merge: 96810db 3abb08c
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Mon Mar 13 15:46:18 2023 +0900
+
+    Merge branch 'main'
+
+[33mcommit 3abb08c97eb9b41fe6fbc0091b94ba84ae51e096[m
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Mon Mar 13 15:32:35 2023 +0900
+
+    'model_abstract_class'
+
+[33mcommit 9bec67374944393bd2f2d647c8ad4d8f96cf2303[m
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Mon Mar 13 13:32:59 2023 +0900
+
+    '03_13_DB'
+
+[33mcommit 96810db9bc6b634840bb16f5eb244b2f88eab992[m
+Author: BaeSungHyun <117246534+BaeSungHyun@users.noreply.github.com>
+Date:   Tue Mar 7 23:17:24 2023 +0900
+
+    Create README.md
+
+[33mcommit 83c6b29e14caa9a4e3feb7c4b6b12edc95700c90[m
+Author: BaeSungHyun <117246534+BaeSungHyun@users.noreply.github.com>
+Date:   Tue Mar 7 23:05:11 2023 +0900
+
+    Delete db.sqlite3
+
+[33mcommit 552d69fa4bf2154c69e39c80b929972f90f46cbe[m
+Author: BaeSungHyun <shijr725@naver.com>
+Date:   Tue Mar 7 23:02:30 2023 +0900
+
+    'shrinkers'
