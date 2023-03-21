@@ -1,7 +1,7 @@
 from shortener.models import ShortenedUrls, Users
 from shortener.urls.serializers import UserSerializer, UrlListSerializer, UrlCreateSerializer
 from django.contrib.auth.models import User, Group
-from rest_framework.decorators import renderer_classes
+from rest_framework.decorators import renderer_classes, action
 from rest_framework.renderers import JSONRenderer
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from shortener.utils import MsgOk, url_count_charger
 from shortener.urls import serializers
 from django.http.response import Http404
-from django.shortcuts import get_object_or_404
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -58,4 +57,13 @@ class UserViewSet(viewsets.ModelViewSet):
         # GET ALL
         queryset = self.get_queryset().all()
         serializer = UrlListSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=["get"])
+    def add_click(self, request, pk=None):
+        queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
+        if not queryset.exists():
+            raise Http404
+        rtn = queryset.first().clicked()
+        serializer = UrlListSerializer(rtn)
         return Response(serializer.data)

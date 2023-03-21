@@ -150,6 +150,7 @@ class ShortenedUrls(TimeStampedModel):
     def clicked(self):
         self.click += 1
         self.save()
+        return self # urls/apis.py 를 위해서
 
 class Statistic(TimeStampedModel):
     class ApproachDevice(models.TextChoices):
