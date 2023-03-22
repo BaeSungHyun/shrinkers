@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "shortener",
+    "drf_yasg",
     "rest_framework",
     "django_user_agents",
 ]
