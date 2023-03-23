@@ -94,6 +94,7 @@ class Users(models.Model):
         on_delete=models.CASCADE,
     )  # AUTH_USER_MODEL 이랑 1:1 mapping. Settings 에서 지워줘야함
     full_name = models.CharField(max_length=100, null=True)
+    telegram_username = models.CharField(max_length=100, null=True)
     url_count = models.IntegerField(default=0)
     # organization 만들면 유료, 안 만들면 무료
     organization = models.ForeignKey(
