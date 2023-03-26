@@ -7,6 +7,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
+from django.core.cache import cache
 from shortener.utils import MsgOk, url_count_charger
 from shortener.urls import serializers
 from django.http.response import Http404
@@ -55,7 +56,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         # GET ALL
-        queryset = self.get_queryset().all()
+        # Basic Cache
+        queryset = cache.get('url_list')
+        if not queryset:
+            queryset = self.get_queryset().filter(creator_id=request.user.id).all()
+            cache.set('url_list', queryset, 20) # 시간별로 기억한다!
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
     

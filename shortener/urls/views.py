@@ -7,6 +7,8 @@ from shortener.utils import url_count_charger
 from ratelimit.decorators import ratelimit
 # from django.contrib.gis.geoip2 import GeoIP2
 from django.db.models import Count
+from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_page
 
 
 @ratelimit(key="ip", rate="3/m")
