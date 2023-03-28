@@ -9,6 +9,7 @@ from ratelimit.decorators import ratelimit
 from django.db.models import Count
 from django.views.decorators.cache import never_cache
 from django.views.decorators.cache import cache_page
+from shortener.urls.telegram_handler import command_handler
 
 
 @ratelimit(key="ip", rate="3/m")
@@ -39,6 +40,7 @@ def url_list(request):
     #     .annotate(t=Count("custom_params__email_id"))
     # )
     # print(a)
+    command_handler()
     get_list = ShortenedUrls.objects.order_by("-created_at").all()
     return render(request, "url_list.html", {"list": get_list})
 

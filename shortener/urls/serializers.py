@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from shortener.models import Users, ShortenedUrls
 from rest_framework import serializers
+import requests
 from shortener.utils import url_count_charger
 
 class UserBaseSerializer(serializers.ModelSerializer):

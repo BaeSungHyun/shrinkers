@@ -185,7 +185,8 @@ class Statistic(TimeStampedModel):
         # t : list
         t = TrackingParams.get_tracking_params(url.id) # url.id : int
         # params : QueryDict.dict()
-        self.custom_params = dict_slice(dict_filter(params, t), 5)
+        if params:
+            self.custom_params = dict_slice(dict_filter(params, t), 5)
 
         try:
             country = location_finder(request)
@@ -209,3 +210,8 @@ class TrackingParams(TimeStampedModel):
         .values_list("params", flat=True))
     # flat = True : ["email_id", "ref_by"]
     # flat = False : [{"params":"email_id", "params":"ref_by"}]
+
+class Schedules(TimeStampedModel):
+    job_name = models.CharField(max_length=50)
+    flag_name = models.CharField(max_length=50)
+    value = models.IntegerField(default=0)
